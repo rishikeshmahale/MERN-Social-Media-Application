@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 export const getCurrentUser = async (req, res) => {
     try{
 
+        // accessing userId from the Auth.js middleware
        const userId = req.userId;
 
        const user = await User.findById(userId);
