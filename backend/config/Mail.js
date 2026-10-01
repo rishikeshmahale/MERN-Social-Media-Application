@@ -1,4 +1,4 @@
-import nodeMailer from "nodemailer";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -7,14 +7,14 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true, 
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 const sendMail = async (to, otp, ) => {
-    transporter.sendMail({
-        from : process.env.EMAIL,
+    await transporter.sendMail({
+        from : `${process.env.EMAIL}`,
         to: to,
         subject : "Reset Your Password",
         html : `<p>Your OTP for password reset is <b>${otp}</b>. It expires in 5 minutes. </p>`

@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema(
         type : Date
     },
     isOtpVerified : {
-        type : boolean,
+        type : Boolean,
         defualt : false
     }
   },
