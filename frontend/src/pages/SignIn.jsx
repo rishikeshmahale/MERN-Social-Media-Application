@@ -111,9 +111,8 @@ const SignIn = () => {
 
           {/* forgot password */}
 
-          <div className="cursor-pointer">Forgot Your Password ?</div>
+          <div className="cursor-pointer" onClick={() => navigate("/forgot-password")}>Forgot Your Password ?</div>
           
-
           {/* Button */}
           <button
             className="w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px]cursor-pointer rounded-2xl mt-[30px]"
