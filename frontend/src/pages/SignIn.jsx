@@ -6,6 +6,8 @@ import axios from "axios";
 import { serverURL } from "../App.jsx";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice.js";
 
 const SignIn = () => {
   const [inputClicked, setInputClicked] = useState({
@@ -24,6 +26,8 @@ const SignIn = () => {
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const handleSignIn = async () => {
     setLoading(true);
     setError("")
@@ -40,6 +44,9 @@ const SignIn = () => {
       );
       setLoading(false);
       console.log(result.data);
+
+      dispatch(setUserData(result.data));
+
     } catch (error) {
       console.log(error);
       setLoading(false);
