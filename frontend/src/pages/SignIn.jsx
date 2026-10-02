@@ -19,11 +19,14 @@ const SignIn = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+  const [error, setError] = useState("");
+
 
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
     setLoading(true);
+    setError("")
     try {
       const result = await axios.post(
         `${serverURL}/api/auth/signin`,
@@ -40,6 +43,7 @@ const SignIn = () => {
     } catch (error) {
       console.log(error);
       setLoading(false);
+      setError(error.response?.data?.message);
     }
   };
 
@@ -48,7 +52,7 @@ const SignIn = () => {
       <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23]">
         <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center justify-center p-[10px] gap-[20px]">
           <div className="flex gap-[10px] items-center text-[20px] font-semibold mt-[40px]">
-            <span>Sign Up to</span>
+            <span>Sign In to</span>
             <img src={logo} alt="logo" className="w-[70px]" />
           </div>
 
@@ -112,6 +116,10 @@ const SignIn = () => {
           {/* forgot password */}
 
           <div className="cursor-pointer" onClick={() => navigate("/forgot-password")}>Forgot Your Password ?</div>
+
+          {error && (
+            <p className="text-red-500">{error}</p>
+          )}
           
           {/* Button */}
           <button

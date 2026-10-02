@@ -1,7 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { serverURL } from "../App";
+import { IoArrowBackOutline } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -20,9 +22,14 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
+  const [error, setError] = useState("");
+
+  let navigate = useNavigate();
+
   //   step 1
   const handleStep1 = async () => {
-    setLoading(true)
+    setLoading(true);
+    setError("");
     try {
       const result = await axios.post(
         `${serverURL}/api/auth/sendOtp`,
@@ -39,13 +46,15 @@ const ForgotPassword = () => {
       setStep(2);
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
+      setError(error.response?.data?.message);
     }
   };
 
   //   step 2
   const handleStep2 = async () => {
-    setLoading(true)
+    setLoading(true);
+    setError("");
     try {
       const result = await axios.post(
         `${serverURL}/api/auth/verifyOtp`,
@@ -59,40 +68,47 @@ const ForgotPassword = () => {
       );
 
       console.log(result.data);
-      setLoading(false)
-      setStep(3)
+      setLoading(false);
+      setStep(3);
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
+      setError(error.response?.data?.message);
     }
   };
 
+  //   step 3
+  const handleStep3 = async () => {
 
-//   step 3
-const handleStep3 = async () => {
-    setLoading(true)
-    try{
-
-        if(newPassword !== confirmNewPassword){
-            console.log("New Password and Confirm new password does not match.")
-            return 
-        }
-
-        const result = await axios.post(`${serverURL}/api/auth/resetPassword`, {
-            email, 
-            password : newPassword
-        }, {
-            withCredentials : true
-        })
-
-        console.log(result.data)
-        setLoading(false)
-
-    }catch(error){
-        console.log(error);
-        setLoading(false)
+    if (newPassword !== confirmNewPassword) {
+      setError("New Password and Confirm new password does not match.");
+      return;
     }
-}
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = await axios.post(
+        `${serverURL}/api/auth/resetPassword`,
+        {
+          email,
+          password: newPassword,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log(result.data);
+      setLoading(false);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(error.response?.data?.message);
+    }
+  };
 
   return (
     <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center">
@@ -129,6 +145,16 @@ const handleStep3 = async () => {
           >
             {loading ? <ClipLoader size={30} color="white" /> : "Send OTP"}
           </button>
+
+          <Link
+            to="/signin"
+            className="flex items-center gap-[6px] text-gray-600 text-[15px] font-medium cursor-pointer mt-[20px] hover:text-black transition-all duration-200"
+          >
+            <IoArrowBackOutline size={18} />
+            Back
+          </Link>
+
+          {error && <p className="text-red-500">{error}</p>}
         </div>
       )}
 
@@ -166,6 +192,8 @@ const handleStep3 = async () => {
           >
             {loading ? <ClipLoader size={30} color="white" /> : "Submit OTP"}
           </button>
+
+          {error && <p className="text-red-500">{error}</p>}
         </div>
       )}
 
@@ -231,6 +259,8 @@ const handleStep3 = async () => {
               "Reset Password"
             )}
           </button>
+
+          {error && <p className="text-red-500">{error}</p>}
         </div>
       )}
     </div>

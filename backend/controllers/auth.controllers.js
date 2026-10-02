@@ -44,7 +44,7 @@ export const signUp = async (req, res) => {
       sameSite: "strict",
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json({message : "Sign Up Succesful!", user : user});
   } catch (error) {
     return res.status(500).json({ message: `Signup Error : ${error.message}` });
   }
@@ -60,7 +60,7 @@ export const signIn = async (req, res) => {
       return res.status(404).json({ message: "User Not Found!" });
     }
 
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: "InCorrect Password!" });
@@ -75,7 +75,7 @@ export const signIn = async (req, res) => {
       sameSite: "strict",
     });
 
-    return res.status(200).json(user);
+    return res.status(200).json({message : "Sign In Succesful!", user : user});
   } catch (error) {
     return res.status(500).json({ message: `SignIn Error : ${error.message}` });
   }
