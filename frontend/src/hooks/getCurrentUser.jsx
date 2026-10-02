@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect } from "react";
 import { serverURL } from "../App";
 import axios from "axios";
@@ -23,7 +22,7 @@ const getCurrentUser = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   return <div>getCurrentUser</div>;
 };

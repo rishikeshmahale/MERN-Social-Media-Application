@@ -1,8 +1,14 @@
-import React from 'react'
+import LeftHome from "../components/LeftHome.jsx";
+import RightHome from "../components/RightHome.jsx";
+import Feed from "../components/Feed.jsx";
 
 const Home = () => {
   return (
-    <div>Home Page</div>
+    <div className="w-full flex justify-center items-start">
+        <LeftHome />
+        <Feed />
+        <RightHome />
+    </div>
   )
 }
 
