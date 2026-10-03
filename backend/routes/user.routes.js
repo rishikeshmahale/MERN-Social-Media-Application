@@ -3,6 +3,8 @@ import { editProfile, getCurrentUser, getProfile, suggestedUsers } from "../cont
 import isAuth from "../middlewares/isAuth.js";
 const userRouter = express.Router();
 
+import { upload } from "../middlewares/multer.js";
+
 userRouter.get("/current", isAuth, getCurrentUser);
 
 userRouter.get("/suggested", isAuth, suggestedUsers);
