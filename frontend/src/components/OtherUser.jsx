@@ -21,6 +21,11 @@ const OtherUser = ({user}) => {
           </div>
         </div>
       </div>
+
+    <button className="px-[8px] w-[80px] py-[5px] h-[40px] bg-[white] rounded-2xl">
+        Follow
+    </button>
+
     </div>
   );
 };
