@@ -52,7 +52,7 @@ const LeftHome = () => {
             </div>
           </div>
         </div>
-        <div className="text-blue-500 font-semibold cursor-pointer" onClick={handleLogout}>Log Out</div>
+        <div className="text-blue-500 font-semibold8 cursor-pointer" onClick={handleLogout}>Log Out</div>
       </div>
 
         {/* suggested Users */}
