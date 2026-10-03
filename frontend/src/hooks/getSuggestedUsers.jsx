@@ -27,7 +27,7 @@ const getSuggestedUsers = () => {
 
         fetchUsers()
 
-    }, [userData]);
+    }, [userData, dispatch]);
 
 }
 
