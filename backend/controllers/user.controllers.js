@@ -6,7 +6,7 @@ export const getCurrentUser = async (req, res) => {
     // accessing userId from the Auth.js middleware
     const userId = req.userId;
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("posts");
 
     if (!user) {
       return res.status(400).json({ message: "User Not Found!" });
