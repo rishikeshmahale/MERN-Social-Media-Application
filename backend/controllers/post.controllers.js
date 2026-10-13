@@ -26,7 +26,7 @@ export const uploadPost = async (req, res) => {
 
         // fetching the current logged in user and pushing the created post's ID in posts array 
         const user = await User.findById(req.userId);
-        user.posts.push(user._id);
+        user.posts.push(post._id);
 
         const populatedPost = await Post.findById(post._id).populate("author", "name username profileImage");
 
@@ -54,6 +54,35 @@ export const getAllPost = async (req, res) => {
     }
 }
 
+
+export const like = async (req, res) => {
+    try{
+
+        const postId = req.params.postId;
+
+        const post = await Post.findById(postId);
+
+        if(!post){
+            return res.status(404).json({message : "Post Not Found!"});
+        }
+
+        const alreadyLiked = post.likes.some((id) => id.toString() == req.userId.toString());
+
+        if(alreadyLiked){
+            post.likes = post.likes.filter((id) => id.toString() != req.userId.toString());
+        }else{
+            post.likes.push(req.userId);
+        }
+
+        await post.save();
+        post.populate("author", "name userName profileImage");
+
+        return res.status(200).json(post);
+
+    }catch(error){
+          return res.status(500).json({message : `Like Post Error ${error.message}`});
+    }
+}
 
 
 
