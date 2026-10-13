@@ -1,6 +1,6 @@
 import uploadOnCloudinary from "../config/cloudinary";
-import Post from "../models/post.model";
-import User from "../models/user.model";
+import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 
 
 export const uploadPost = async (req, res) => {
@@ -111,6 +111,39 @@ export const comment = async (req, res) => {
 
     }catch(error){
         return res.status(500).json({message : `Comment Post Error ${error.message}`});
+    }
+}
+
+
+export const saved = async (req, res) => {
+    try{
+        
+        const postId = req.params.postId;
+
+        const post = await Post.findById(postId);
+
+        const user = await User.findById(req.userId);
+
+        if(!post){
+            return res.status(404).json({message : "Post you're trying to saved not found!"});
+        }
+
+        const alreadySaved = user.saved.some((id) => id.toString() == postId.toString());
+
+        if(alreadySaved){
+            user.saved = user.saved.filter((id) => id.toString() != postId.toString())
+        }else{
+            user.saved.push(postId);
+        }
+
+        await user.save();
+
+        user.populate("saved");
+
+        return res.status(200).json(user);
+
+    }catch(error){
+        return res.status(500).json({message : `Saved Post Error ${error.message}`});
     }
 }
 
