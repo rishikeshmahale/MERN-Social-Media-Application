@@ -39,4 +39,31 @@ export const uploadLoop = async (req, res) => {
 }
 
 
+export const like = async (req, res) => {
+    try{
 
+        const loopId = req.params.loopId;
+
+        const loop = await Loop.findById(loopId);
+
+        if(!loop){
+            return res.status(404).json({message : "Loop Not Found!"});
+        }
+
+        const alreadyLiked = loop.likes.some((id) => id.toString() == req.userId.toString());
+
+        if(alreadyLiked){
+            loop.likes = post.likes.filter((id) => id.toString() != req.userId.toString());
+        }else{
+            loop.likes.push(req.userId);
+        }
+
+        await loop.save();
+        loop.populate("author", "name userName profileImage");
+
+        return res.status(200).json(loop);
+
+    }catch(error){
+          return res.status(500).json({message : `Like Loop Error ${error.message}`});
+    }
+}
