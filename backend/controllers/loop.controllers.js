@@ -101,7 +101,7 @@ export const comment = async (req, res) => {
 export const getAllLoops = async (req, res) => {
     try{
 
-        const loops = await Loop.find({author : req.userId}).populate("author", "name userName profileImage");
+        const loops = await Loop.find({}).populate("author", "name userName profileImage");
 
         if(!loops){
             return res.status(404).json({message : "No Loops yet!"})
