@@ -67,3 +67,32 @@ export const like = async (req, res) => {
           return res.status(500).json({message : `Like Loop Error ${error.message}`});
     }
 }
+
+export const comment = async (req, res) => {
+    try{
+
+        const { message } = req.body;
+        const loopId = req.params.loopId;
+
+        const loop = await post.findById(loopId);
+
+        if(!loop){
+            return res.status(404).json({message : "Loop not found!"})
+        }
+
+        loop.comments.push({
+            author : req.userId,
+            message 
+        });
+
+        await loop.save();
+
+        loop.populate("author", "name userName profileImage");
+        loop.populate("comments.author");
+
+        return res.status(200).json(loop)
+
+    }catch(error){
+        return res.status(500).json({message : `Comment Loop Error ${error.message}`});
+    }
+}
