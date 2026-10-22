@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
-app.use("/api/loop", loopRouterRouter);
+app.use("/api/loop", loopRouter);
 
 
 app.get("/", (req, res) => {

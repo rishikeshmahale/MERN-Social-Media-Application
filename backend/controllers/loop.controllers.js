@@ -1,6 +1,6 @@
-import uploadOnCloudinary from "../config/cloudinary";
-import Loop from "../models/loop.model";
-import User from "../models/user.model";
+import uploadOnCloudinary from "../config/cloudinary.js";
+import Loop from "../models/loop.model.js";
+import User from "../models/user.model.js";
 
 
 
