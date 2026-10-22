@@ -96,3 +96,20 @@ export const comment = async (req, res) => {
         return res.status(500).json({message : `Comment Loop Error ${error.message}`});
     }
 }
+
+
+export const getAllLoops = async (req, res) => {
+    try{
+
+        const loops = await Loop.find({author : req.userId}).populate("author", "name userName profileImage");
+
+        if(!loops){
+            return res.status(404).json({message : "No Loops yet!"})
+        }
+
+        return res.status(200).json(loops);
+
+    }catch(error){
+        return res.status(500).json({message : `Get All Loops Error ${error.message}`});
+    }
+}
