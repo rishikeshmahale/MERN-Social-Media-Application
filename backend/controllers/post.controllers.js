@@ -1,4 +1,4 @@
-import uploadOnCloudinary from "../config/cloudinary";
+import uploadOnCloudinary from "../config/cloudinary.js";
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 
@@ -38,7 +38,7 @@ export const uploadPost = async (req, res) => {
 }
 
 
-export const getAllPost = async (req, res) => {
+export const getAllPosts = async (req, res) => {
     try{
 
         const posts = await Post.find({author : req.userId}).populate("author", "name userName profileImage");
