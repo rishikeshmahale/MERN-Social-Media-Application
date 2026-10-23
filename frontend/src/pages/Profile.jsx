@@ -54,7 +54,7 @@ const Profile = () => {
     <div className="w-full min-h-screen bg-black">
       <div className="w-full h-[80px] flex justify-between items-center px-[30px] text-white">
         <div>
-          <MdOutlineKeyboardBackspace className="text-white w-[25px] h-[25px] cursor-pointer" />
+          <MdOutlineKeyboardBackspace className="text-white w-[25px] h-[25px] cursor-pointer" onClick={() => navigate("/")}/>
         </div>
         <div className="font-semibold text-[20px]">{profileData?.userName}</div>
         <div
