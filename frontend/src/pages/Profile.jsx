@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProfileData, setUserData } from "../redux/userSlice";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import dp from "../assets/dp.png";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { userName } = useParams();
@@ -14,6 +15,7 @@ const Profile = () => {
 
   const { profileData, userData } = useSelector((state) => state.user);
 
+  const navigate = useNavigate();
   
   useEffect(() => {
 
@@ -171,7 +173,7 @@ const Profile = () => {
 {/* buttons */}
       <div className="w-full h-[80px] flex justify-center items-center gap-[20px] mt-[10px]">
         {profileData?._id == userData._id && (
-          <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl">
+          <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl" onClick={() => navigate("/editprofile")}>
             Edit Profile
           </button>
         )}
