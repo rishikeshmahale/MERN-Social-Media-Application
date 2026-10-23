@@ -36,7 +36,7 @@ const Nav = () => {
           <div className="w-[40px] h-[40px] border-2 border-black rounded-full cursor-pointer overflow-hidden" 
           onClick={() => navigate(`/profile/${userData.userName}`)}>
             <img
-              src={dp}
+              src={userData.profileImage || dp}
               alt="dp"
               className="w-full object-cover"
             />
