@@ -68,8 +68,7 @@ export const viewStory = async (req, res) => {
     }
 }
 
-
-const getStoryByUserName = async (req, res) => {
+export const getStoryByUserName = async (req, res) => {
     try{
         
         const userName = req.params.userName;
