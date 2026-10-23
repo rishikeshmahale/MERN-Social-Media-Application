@@ -68,3 +68,24 @@ export const viewStory = async (req, res) => {
     }
 }
 
+
+const getStoryByUserName = async (req, res) => {
+    try{
+        
+        const userName = req.params.userName;
+        const user = await User.findOne({userName});
+
+        if(!user){
+            return res.status(404).json({message : "User not found!"});
+        }
+
+        const story = await Story.find({
+            author : user._id
+        }).populate("viewers author");
+
+        return res.status(200).json(story);
+    }catch(error){
+        return res.status(500).json({message : `Get Story by userName Error : ${error.message}`});
+    }
+}
+
