@@ -1,0 +1,42 @@
+import uploadOnCloudinary from "../config/cloudinary.js";
+import Story from "../models/story.model.js";
+import User from "../models/user.model.js";
+
+
+export const uploadStory = async (req, res) => {
+    try{
+
+        const user = await User.findById(req.userId);
+
+        if(user.story){
+            await Story.findByIdAndDelete(req.userId);
+            user.story = null;
+        }
+
+        const { mediaType } = req.body;
+
+        let media;
+
+        if(req.file){
+            media = await uploadOnCloudinary(req.file.path);
+        }else{
+            return res.status(400).json({message : "Media is required!"});
+        }
+
+        const story = await Story.create({
+            author : authorId, 
+            mediaType, 
+            media
+        });
+
+        user.story.push(story._id);
+        await user.save();
+
+        const populatedStory = await Story.findById(story._id).populate("author", "name userName profileImage").populate("viewers", "name userName profileImage");
+
+        return res.status(200).json(populatedStory);
+
+    }catch(error){
+        return res.status(500).json({message : `Upload Story Error : ${error.message}`});
+    }
+}
