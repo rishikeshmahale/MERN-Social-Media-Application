@@ -7,6 +7,7 @@ import { setProfileData, setUserData } from "../redux/userSlice";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import dp from "../assets/dp.png";
 import { useNavigate } from "react-router-dom";
+import Nav from "../components/Nav.jsx";
 
 const Profile = () => {
   const { userName } = useParams();
@@ -190,7 +191,13 @@ const Profile = () => {
         )}
       </div>
 
+      <div className="w-full min-h-[100vh] flex justify-center">
+        <div className="w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px]">
 
+            <Nav />
+
+        </div>
+      </div>
 
 
 
