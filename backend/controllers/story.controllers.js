@@ -49,7 +49,7 @@ export const viewStory = async (req, res) => {
         const story = await Story.findById(storyId);
 
         if(!story){
-            return res.status(400).json({message : "Story not found!"})
+            return res.status(404).json({message : "Story not found!"})
         }
 
         const viewersIds = story.viewers.map((id) => id.toString());
