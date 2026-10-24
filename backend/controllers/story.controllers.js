@@ -9,7 +9,7 @@ export const uploadStory = async (req, res) => {
         const user = await User.findById(req.userId);
 
         if(user.story){
-            await Story.findByIdAndDelete(req.userId);
+            await Story.findByIdAndDelete(user.story);
             user.story = null;
         }
 
@@ -24,12 +24,12 @@ export const uploadStory = async (req, res) => {
         }
 
         const story = await Story.create({
-            author : authorId, 
+            author : req.userId, 
             mediaType, 
             media
         });
 
-        user.story.push(story._id);
+        user.story?.push(story._id);
         await user.save();
 
         const populatedStory = await Story.findById(story._id).populate("author", "name userName profileImage").populate("viewers", "name userName profileImage");
