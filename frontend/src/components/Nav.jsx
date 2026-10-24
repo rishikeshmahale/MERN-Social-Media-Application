@@ -17,19 +17,19 @@ const Nav = () => {
     <div className='w-[90%] lg:w-[40%] h-[80px] bg-black flex justify-around items-center fixed bottom-[20px] rounded-full shadow-2xl shadow-[#000000] z-[100]'>
         
         <div onClick={() => navigate("/")}>
-            <GoHomeFill className="text-white w-[25px] h-[25px]"/>
+            <GoHomeFill className="text-white w-[25px] h-[25px] cursor-pointer"/>
         </div>
 
         <div>
-            <FiSearch className="text-white w-[25px] h-[25px]"/>
+            <FiSearch className="text-white w-[25px] h-[25px] cursor-pointer"/>
+        </div>
+
+        <div onClick={() => navigate("/upload")}>
+            <FiPlusSquare className="text-white w-[25px] h-[25px] cursor-pointer"/>
         </div>
 
         <div>
-            <FiPlusSquare className="text-white w-[25px] h-[25px]"/>
-        </div>
-
-        <div>
-            <RxVideo className="text-white w-[25px] h-[28px]"/>
+            <RxVideo className="text-white w-[25px] h-[28px] cursor-pointer"/>
         </div>
 
 
