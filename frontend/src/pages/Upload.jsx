@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { FiPlusSquare } from "react-icons/fi";
 import { useRef } from "react";
 import VideoPlayer from "../components/VideoPlayer.jsx";
+import { serverURL } from "../App.jsx";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setPostData } from "../redux/postSlice.js";
+import { setStoryData } from "../redux/storySlice.js";
+import { setLoopData } from "../redux/loopSlice.js";
+import { ClipLoader } from "react-spinners";
 
 const Upload = () => {
   const navigate = useNavigate();
@@ -18,17 +25,123 @@ const Upload = () => {
   const [mediaType, setMediaType] = useState("");
   const [caption, setCaption] = useState("");
 
-  const handleMedia = (e) => {
-    const file = e.target.files[0];
+  const dispatch = useDispatch();
+  const { postData } = useSelector((state) => state.post);
+  const { storyData } = useSelector((state) => state.story);
+  const { loopData} = useSelector((state) => state.loop);
 
-    if (file.type.includes("image")) {
+  const [loading, setLoading] = useState(false);
+
+  const handleMedia = (e) => {
+    // const file = e.target.files[0];
+
+    // if (file.type.includes("image")) {
+    //   setMediaType("image");
+    // } else {
+    //   setMediaType("video");
+    // }
+
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (file.type.startsWith("image/")) {
       setMediaType("image");
-    } else {
+    } else if (file.type.startsWith("video/")) {
       setMediaType("video");
+    } else {
+      alert("Please select an image or video.");
+      return;
     }
 
     setBackendMedia(file);
     setFrontendMedia(URL.createObjectURL(file));
+  };
+
+  const uploadPost = async () => {
+    setLoading(true)
+    try {
+      const formData = new FormData();
+
+      formData.append("caption", caption);
+      formData.append("mediaType", mediaType);
+      formData.append("media", backendMedia);
+
+      const result = await axios.post(
+        `${serverURL}/api/post/upload`,
+        formData,
+        { withCredentials: true },
+      );
+
+      console.log(result);
+
+      dispatch(setPostData([...postData, result.data]));
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const UploadStory = async () => {
+    setLoading(true)
+    try {
+      const formData = new FormData();
+
+      formData.append("mediaType", mediaType);
+      formData.append("media", backendMedia);
+
+      const result = await axios.post(
+        `${serverURL}/api/story/upload`,
+        formData,
+        { withCredentials: true },
+      );
+
+      console.log(result);
+      dispatch(setStoryData([...storyData, result.data]));
+      setLoading(false);
+      navigate("/")
+    } catch (error) {
+      console.error(
+        "Story upload failed:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  const UploadLoop = async () => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+
+      formData.append("caption", caption);
+      formData.append("media", backendMedia);
+
+      const result = await axios.post(
+        `${serverURL}/api/loop/upload`,
+        formData,
+        { withCredentials: true },
+      );
+
+      console.log(result);
+      dispatch(setLoopData([...loopData, result.data]))
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpload = () => {
+    setLoading(true)
+    console.log("clicked");
+    if (uploadType == "post") {
+      uploadPost();
+    } else if (uploadType == "story") {
+      UploadStory();
+    } else {
+      UploadLoop();
+    }
   };
 
   return (
@@ -101,7 +214,7 @@ const Upload = () => {
 
           {mediaType == "video" && (
             <div className="w-[80%] max-w-[500px] h-[250px] flex flex-col items-center justify-center mt-[5vh]">
-              <VideoPlayer media={frontendMedia}/>
+              <VideoPlayer media={frontendMedia} />
 
               {uploadType != "story" && (
                 <input
@@ -118,8 +231,11 @@ const Upload = () => {
       )}
 
       {frontendMedia && (
-        <button className="px-[10px] w-[60%] max-w-[400px] py-[5px] h-[50px] bg-[white] mt-[50px] cursor-pointer rounded-2xl">
-          Upload {uploadType}
+        <button
+          className="px-[10px] w-[60%] max-w-[400px] py-[5px] h-[50px] bg-[white] mt-[50px] cursor-pointer rounded-2xl"
+          onClick={handleUpload}
+        >
+            {loading ? <ClipLoader size={30} color="black"/> : `Upload ${uploadType}`}
         </button>
       )}
     </div>
