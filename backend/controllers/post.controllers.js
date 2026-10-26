@@ -75,7 +75,7 @@ export const like = async (req, res) => {
         }
 
         await post.save();
-        post.populate("author", "name userName profileImage");
+        await post.populate("author", "name userName profileImage");
 
         return res.status(200).json(post);
 
@@ -104,8 +104,8 @@ export const comment = async (req, res) => {
 
         await post.save();
 
-        post.populate("author", "name userName profileImage");
-        post.populate("comments.author");
+        await post.populate("author", "name userName profileImage");
+        await post.populate("comments.author");
 
         return res.status(200).json(post)
 
@@ -138,7 +138,7 @@ export const saved = async (req, res) => {
 
         await user.save();
 
-        user.populate("saved");
+        await user.populate("saved");
 
         return res.status(200).json(user);
 
