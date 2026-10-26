@@ -11,6 +11,7 @@ import { IoSendSharp } from "react-icons/io5";
 import axios from "axios";
 import { serverURL } from "../App";
 import { setPostData } from "../redux/postSlice";
+import { setUserData } from "../redux/userSlice";
 
 const Post = ({ post }) => {
   console.log("post :", post);
@@ -43,7 +44,6 @@ const Post = ({ post }) => {
   };
 
   const handleComment = async () => {
-    console.log("handle comment");
     try {
       const result = await axios.post(
         `${serverURL}/api/post/comment/${post._id}`,
@@ -61,7 +61,25 @@ const Post = ({ post }) => {
 
       dispatch(setPostData(updatedPosts));
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response);
+    }
+  };
+
+  const handleSave = async () => {
+    console.log("handle save");
+    try {
+      const result = await axios.get(
+        `${serverURL}/api/post/saved/${post._id}`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log("Save API response:", result.data);
+
+      dispatch(setUserData(result.data));
+    } catch (error) {
+      console.log(error.response);
     }
   };
 
@@ -122,15 +140,24 @@ const Post = ({ post }) => {
             <span>{post?.likes?.length}</span>
           </div>
           {/* Comment */}
-          <div className="flex justify-center items-center gap-[5px]" onClick={() => setShowComments((prev) => !prev)}>
+          <div
+            className="flex justify-center items-center gap-[5px]"
+            onClick={() => setShowComments((prev) => !prev)}
+          >
             <MdOutlineComment className="w-[25px] cursor-pointer h-[25px]" />
             <span>{post?.comments?.length}</span>
           </div>
         </div>
         {/* save */}
-        <div>
-          {!userData?.save?.includes(post?._id) && <MdOutlineBookmarkBorder />}
-          {userData?.save?.includes(post?._id) && <GoBookmarkFill />}
+        <div onClick={handleSave} className="cursor-pointer">
+          {/* {!userData.saved?.includes(post?._id) && <MdOutlineBookmarkBorder />} */}
+          {/* {userData.saved?.includes(post?._id) && <GoBookmarkFill />} */}
+
+          {userData.saved?.some((savedPost) => savedPost._id === post._id) ? (
+            <GoBookmarkFill className="w-[25px] h-[25px] text-black" />
+          ) : (
+            <MdOutlineBookmarkBorder className="w-[25px] h-[25px]" />
+          )}
         </div>
       </div>
 
@@ -168,7 +195,10 @@ const Post = ({ post }) => {
 
           <div className="w-full max-h-[300px] overflow-auto ">
             {post.comments?.map((com, index) => (
-              <div key={index} className="w-full px-[20px] py-[20px] flex items-center gap-[20px] border-b-2 border-b-gray-200">
+              <div
+                key={index}
+                className="w-full px-[20px] py-[20px] flex items-center gap-[20px] border-b-2 border-b-gray-200"
+              >
                 <div className="w-[40px] h-[40px] md:w-[60px] md:h-[60px] border-2 border-black rounded-full cursor-pointer overflow-hidden">
                   <img
                     src={com.author?.profileImage || dp}
