@@ -41,7 +41,7 @@ export const uploadPost = async (req, res) => {
 export const getAllPosts = async (req, res) => {
     try{
 
-        const posts = await Post.find({}).populate("author", "name userName profileImage").sort({createdAt : -1});
+        const posts = await Post.find({}).populate("author", "name userName profileImage").populate("comments.author", "name userName profileImage").sort({createdAt : -1});
 
         if(!posts){
             return res.status(404).json({message : "No Posts yet!"})
