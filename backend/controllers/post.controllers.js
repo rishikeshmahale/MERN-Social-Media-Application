@@ -91,7 +91,7 @@ export const comment = async (req, res) => {
         const { message } = req.body;
         const postId = req.params.postId;
 
-        const post = await post.findById(postId);
+        const post = await Post.findById(postId);
 
         if(!post){
             return res.status(404).json({message : "Post not found!"})
