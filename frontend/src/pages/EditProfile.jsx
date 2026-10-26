@@ -63,7 +63,11 @@ const EditProfile = () => {
       navigate(`/profile/${userData.userName}`);
       setLoading(false);
     } catch (error) {
-      console.log(error.message);
+      console.error("Profile update failed:", error);
+      console.error("Backend response:", error.response?.data);
+      console.error("HTTP status:", error.response?.status);
+    } finally {
+      setLoading(false);
     }
   };
 
