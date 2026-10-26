@@ -28,7 +28,7 @@ export const uploadPost = async (req, res) => {
         const user = await User.findById(req.userId);
         user.posts.push(post._id);
 
-        const populatedPost = await Post.findById(post._id).populate("author", "name username profileImage");
+        const populatedPost = await Post.findById(post._id).populate("author", "name userName profileImage");
 
         return res.status(201).json(populatedPost);
 
