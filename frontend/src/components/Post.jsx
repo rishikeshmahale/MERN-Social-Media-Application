@@ -18,15 +18,36 @@ const Post = ({ post }) => {
   const { userData } = useSelector((state) => state.user);
   const { postData } = useSelector((state) => state.post);
 
-  const [showComments, setShowComments] = useState(true);
+  const [showComments, setShowComments] = useState(false);
+  const [message, setMessage] = useState("");
 
   const dispatch = useDispatch();
 
   const handleLike = async () => {
     console.log("clicked");
     try {
-      const result = await axios.get(
-        `${serverURL}/api/post/like/${post._id}`,
+      const result = await axios.get(`${serverURL}/api/post/like/${post._id}`, {
+        withCredentials: true,
+      });
+
+      const updatedPost = result.data;
+
+      const updatedPosts = postData.map((p) =>
+        p._id == post._id ? updatedPost : p,
+      );
+
+      dispatch(setPostData(updatedPosts));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleComment = async () => {
+    console.log("handle comment");
+    try {
+      const result = await axios.post(
+        `${serverURL}/api/post/comment/${post._id}`,
+        { message },
         {
           withCredentials: true,
         },
@@ -34,11 +55,11 @@ const Post = ({ post }) => {
 
       const updatedPost = result.data;
 
-      const updatedPosts = postData.map((p) => p._id == post._id ? updatedPost : p);
+      const updatedPosts = postData.map((p) =>
+        p._id == post._id ? updatedPost : p,
+      );
 
       dispatch(setPostData(updatedPosts));
-
-
     } catch (error) {
       console.log(error.message);
     }
@@ -86,30 +107,29 @@ const Post = ({ post }) => {
       <div className="w-full h-[60px] flex justify-between items-center px-[20px] mt-[10px]">
         <div className="flex justify-center items-center gap-[10px]">
           {/* like */}
-          <div className="flex justify-center items-center gap-[5px]" onClick={handleLike}>
+          <div
+            className="flex justify-center items-center gap-[5px]"
+            onClick={handleLike}
+          >
             {!post?.likes.includes(userData._id) && (
               <GoHeart className="w-[25px] cursor-pointer h-[25px]" />
             )}
 
             {post?.likes.includes(userData._id) && (
-              <GoHeartFill
-                className="w-[25px] cursor-pointer h-[25px] text-red-600"
-              />
+              <GoHeartFill className="w-[25px] cursor-pointer h-[25px] text-red-600" />
             )}
 
             <span>{post?.likes?.length}</span>
           </div>
           {/* Comment */}
-          <div className="flex justify-center items-center gap-[5px]">
-            <MdOutlineComment className="w-[25px] cursor-pointer h-[25px]"/>
+          <div className="flex justify-center items-center gap-[5px]" onClick={() => setShowComments((prev) => !prev)}>
+            <MdOutlineComment className="w-[25px] cursor-pointer h-[25px]" />
             <span>{post?.comments?.length}</span>
           </div>
         </div>
         {/* save */}
         <div>
-          {!userData?.save?.includes(post?._id) && (
-            <MdOutlineBookmarkBorder />
-          )}
+          {!userData?.save?.includes(post?._id) && <MdOutlineBookmarkBorder />}
           {userData?.save?.includes(post?._id) && <GoBookmarkFill />}
         </div>
       </div>
@@ -135,10 +155,30 @@ const Post = ({ post }) => {
               type="text"
               className="px-[10px] border-b-2 border-b-gray-500 w-[90%] outline-none h-[40px]"
               placeholder="write comment...."
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
             />
-            <button className="absolute right-[20px] cursor-pointer">
+            <button
+              className="absolute right-[20px] cursor-pointer"
+              onClick={handleComment}
+            >
               <IoSendSharp className="w-[25px] h-[25px]" />
             </button>
+          </div>
+
+          <div className="w-full max-h-[300px] overflow-auto ">
+            {post.comments?.map((com, index) => (
+              <div key={index} className="w-full px-[20px] py-[20px] flex items-center gap-[20px] border-b-2 border-b-gray-200">
+                <div className="w-[40px] h-[40px] md:w-[60px] md:h-[60px] border-2 border-black rounded-full cursor-pointer overflow-hidden">
+                  <img
+                    src={com.author?.profileImage || dp}
+                    alt="dp"
+                    className="w-full object-cover"
+                  />
+                </div>
+                <div>{com?.message}</div>
+              </div>
+            ))}
           </div>
         </div>
       )}
